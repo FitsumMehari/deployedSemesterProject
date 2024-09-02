@@ -20,8 +20,19 @@ router.post("/register", async(req, res, next) => {
         !req.body.email ||
         !req.body.fieldofstudy
     ) {
-        res.status(400).json("Please fill the required inputs!");
+        res.status(200).json({ message: "Please fill the required inputs!" });
     } else {
+
+        // Check if user email exists
+        const existingUser = await User.findOne({
+            email: req.body.email
+
+        })
+
+        if (!!existingUser) {
+            return res.status(200).json({ message: "Email already taken!" })
+        }
+
         const newUser = new User({
             username: req.body.username,
             password: md5(req.body.password),
@@ -64,7 +75,7 @@ router.post("/login", async(req, res, next) => {
             }
 
             const accessToken = jwt.sign({
-                    id: user._id,
+                    _id: user._id,
                     isAdmin: user.userType === "admin",
                     email: user.email,
                     username: user.username,
@@ -140,10 +151,13 @@ router.post("/loginAdmin", async(req, res, next) => {
 
 // Update
 router.put("/update", verifyToken, async(req, res, next) => {
-    // console.log('here on updateeee');
 
     try {
-        const user = await User.findByIdAndUpdate(req.body.id, req.body);
+        const user = await User.findByIdAndUpdate(req.body._id, {
+            username: req.body.username,
+            email: req.body.email,
+            fieldofstudy: req.body.fieldofstudy
+        });
 
         const accessToken = jwt.sign({
                 id: user._id,
