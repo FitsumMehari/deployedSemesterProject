@@ -19,6 +19,11 @@ const ExamSchema = new mongoose.Schema({
         },
         answer: String,
     }, ],
+    visibility: {
+        type: String,
+        default: 'true',
+        required: false
+    }
 }, {
     timestamps: true,
 });
