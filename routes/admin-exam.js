@@ -26,6 +26,22 @@ router.get("/:id", verifyToken, async(req, res, next) => {
     }
 });
 
+// Update all exams
+router.put("/all/:examVisibility", verifyToken, async(req, res, next) => {
+
+    console.log(req.params.examVisibility);
+
+    try {
+        // const exam = await Exam.findByIdAndUpdate(req.body._id, req.body);
+        const exams = await Exam.updateMany({}, {
+            "$set": { "visibility": req.params.examVisibility }
+        })
+        res.status(200).json({ message: "Update Successful!", exams });
+    } catch (error) {
+        next(error);
+    }
+});
+
 // Update exam
 router.put("/", verifyToken, async(req, res, next) => {
     try {
