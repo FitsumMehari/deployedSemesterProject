@@ -13,6 +13,11 @@ const TutorialSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    visibility: {
+        type: String,
+        default: 'true',
+        required: false
+    }
 })
 
 module.exports = mongoose.model("tutorial", TutorialSchema)
