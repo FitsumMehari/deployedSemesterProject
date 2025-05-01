@@ -5,6 +5,22 @@ const { verifyTokenAndAuthorization, verifyToken } = require("./verifyToken");
 const material = require("../models/Material");
 const Material = require("../models/Material");
 
+// Update all exams
+router.put("/all/:materialsVisibility", verifyToken, async(req, res, next) => {
+
+    console.log(req.params.materialsVisibility);
+
+    try {
+        // const exam = await Exam.findByIdAndUpdate(req.body._id, req.body);
+        const materials = await Material.updateMany({}, {
+            "$set": { "visibility": req.params.materialsVisibility }
+        })
+        res.status(200).json({ message: "Update Successful!", materials });
+    } catch (error) {
+        next(error);
+    }
+});
+
 // Get materials
 router.get("/:id", verifyToken, async(req, res, next) => {
     let id = req.params.id.split(":")[1];

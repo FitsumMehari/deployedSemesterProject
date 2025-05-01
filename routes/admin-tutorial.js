@@ -4,6 +4,21 @@ const { verifyTokenAndAuthorization, verifyToken } = require("./verifyToken");
 
 const Tutorial = require("../models/Tutorial");
 
+// Update all exams
+router.put("/all/:tutorialsVisibility", verifyToken, async(req, res, next) => {
+
+    console.log(req.params.tutorialsVisibility);
+
+    try {
+        // const exam = await Exam.findByIdAndUpdate(req.body._id, req.body);
+        const tutorials = await Tutorial.updateMany({}, {
+            "$set": { "visibility": req.params.tutorialsVisibility }
+        })
+        res.status(200).json({ message: "Update Successful!", tutorials });
+    } catch (error) {
+        next(error);
+    }
+});
 // Get Tutorials
 router.get("/:id", verifyToken, async(req, res, next) => {
     let id = req.params.id.split(":")[1];
